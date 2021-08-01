@@ -1,10 +1,10 @@
 package com.example.withingstest.activities
 
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Guideline
@@ -23,7 +23,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var guideline: Guideline
     private lateinit var recyclerView : RecyclerView
     private lateinit var searchAdapter: SearchAdapter
-    private val handler: Handler = Handler()
+    private var selectedImageResult: MutableList<ImageResult> = mutableListOf()
+    private lateinit var searchInput : EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +36,14 @@ class SearchActivity : AppCompatActivity() {
             recyclerView.visibility = View.VISIBLE
             getImage()
         }
+        searchInput = findViewById(R.id.searchInput)
     }
 
     private fun getImage() {
+        val q = if (searchInput.text.isNotEmpty()) searchInput.text.trim().toString() else ""
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                val response = RetrofitClient.apiService.getImage().awaitResponse()
+                val response = RetrofitClient.apiService.getImage(q).awaitResponse()
 
                 if (response.isSuccessful) {
                     val data = response.body()!!
@@ -63,22 +66,14 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showImage(list : List<ImageResult>) {
-        searchAdapter = SearchAdapter(list) {
-            handler.removeCallbacksAndMessages(null)
-            /*if (it.isChecked)
-                ++checkedLetter
-            else
-                --checkedLetter
-
-            if (checkedLetter >= session.consultation.minLettersToRead(startAcuity)) {
-                //for avoid click on next screen
-                handler.postDelayed({
-                    canClickOnLetter = false
-                    presenter.onRead()
-                    //acuityLetterAdapter.notifyDataSetChanged()
-                    checkedLetter = 0
-                }, 500)
-            }*/
+        searchAdapter = SearchAdapter(list) { itemView: View, image: ImageResult ->
+            if (itemView.getTag(R.id.TAG_IMG_SELECTED) == false) {
+                itemView.setTag(R.id.TAG_IMG_SELECTED, true)
+                selectedImageResult.add(image)
+            } else {
+                itemView.setTag(R.id.TAG_IMG_SELECTED, false)
+                selectedImageResult.remove(image)
+            }
         }
 
         recyclerView.apply {

@@ -1,11 +1,13 @@
 package com.example.withingstest.activities
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.withingstest.R
 import com.example.withingstest.data.domain.ImageResult
 
-class SearchAdapter(private var list: List<ImageResult>, private val onItemClicked: (ImageResult) -> Unit) :
+class SearchAdapter(private var list: List<ImageResult>, private val onItemClicked: (View, ImageResult) -> Unit) :
     RecyclerView.Adapter<SearchHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -19,7 +21,8 @@ class SearchAdapter(private var list: List<ImageResult>, private val onItemClick
         else
             holder.bind(image, null)
 
-        holder.itemView.setOnClickListener { onItemClicked(image) }
+        holder.itemView.setTag(R.id.TAG_IMG_SELECTED, false)
+        holder.itemView.setOnClickListener { onItemClicked(holder.itemView, image) }
     }
 
     fun updateList(list: List<ImageResult>) {

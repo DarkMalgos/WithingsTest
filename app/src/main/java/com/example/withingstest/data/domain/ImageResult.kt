@@ -5,5 +5,7 @@ data class ImageResult(
     val previewURL: String,
     val previewWidth : Int,
     val previewHeight : Int,
-    val imageURL : String
+    val largeImageURL : String,
+    val fullHDURL : String,
+    val imageURL : String,
 )
