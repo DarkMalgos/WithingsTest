@@ -1,4 +1,4 @@
-package com.example.withingstest.activities
+package com.example.withingstest.activities.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso
 class SearchHolder(inflater: LayoutInflater, private val parent: ViewGroup) : RecyclerView.ViewHolder(inflater.inflate(
     R.layout.search_row, parent, false)) {
     var mImage: ImageView = itemView.findViewById(R.id.imageView)
+    var mIndicator: ImageView = itemView.findViewById(R.id.selectedIndicator)
     var isSelected: Boolean = false
 
     fun bind(image: ImageResult, margin: Int?) {
