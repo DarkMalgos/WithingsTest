@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Guideline
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,6 +26,7 @@ class SearchActivity() : AppCompatActivity(), SearchContract.View {
     private var selectedImageResult: MutableList<ImageResult> = mutableListOf()
     private lateinit var searchInput : EditText
     override lateinit var presenter: SearchContract.Presenter
+    private lateinit var progressBar : ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +46,11 @@ class SearchActivity() : AppCompatActivity(), SearchContract.View {
             intent.putParcelableArrayListExtra("images", ArrayList(selectedImageResult))
             startActivity(intent)
         }
+        progressBar = findViewById(R.id.progressBar)
     }
 
     override fun showImage(list : List<ImageResult>) {
-        //todo stop loader
+        progressBar.visibility = View.GONE
         searchAdapter = SearchAdapter(list) { holder: SearchHolder, image: ImageResult ->
             val itemView = holder.itemView
             if (itemView.getTag(R.id.TAG_IMG_SELECTED) == false) {
@@ -66,6 +69,10 @@ class SearchActivity() : AppCompatActivity(), SearchContract.View {
             layoutManager = GridLayoutManager(this@SearchActivity, 2)
             adapter = searchAdapter
         }
+    }
+
+    override fun startLoader() {
+        progressBar.visibility = View.VISIBLE
     }
 
     private fun checkSelectedItem() {

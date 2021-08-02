@@ -23,7 +23,7 @@ class SearchPresenter(view: SearchContract.View, val context: Context) : SearchC
 
     override fun getImage(searchInput: EditText) {
         GlobalScope.launch(Dispatchers.Main) {
-            //todo start loader
+            view!!.startLoader()
         }
 
         val q = if (searchInput.text.isNotEmpty()) searchInput.text.trim().toString() else ""

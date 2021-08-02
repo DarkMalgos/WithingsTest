@@ -12,5 +12,6 @@ interface SearchContract {
 
     interface View : BaseView<Presenter> {
         fun showImage(list : List<ImageResult>)
+        fun startLoader()
     }
 }
